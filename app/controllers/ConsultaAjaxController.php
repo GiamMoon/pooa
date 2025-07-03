@@ -2,7 +2,7 @@
 class ConsultaAjaxController extends Controller{    
     public function buscar_dni() {
         $dni = $_GET['dni'];
-        $token = 'apis-token-15310.8bbaAe16t6MfPH8MAg80V5yeUXaHhSPV'; // Poner Token
+        $token = 'apis-token-16396.hrcKuFHmiYP6WU1oPcsF7FRtfea7DoDI'; // Poner Token
 
         $curl = curl_init();
         curl_setopt_array($curl, [
@@ -86,7 +86,7 @@ class ConsultaAjaxController extends Controller{
 
     public function buscar_proveedor() {
         $ruc = $_GET['ruc'];
-        $token = 'apis-token-15310.8bbaAe16t6MfPH8MAg80V5yeUXaHhSPV'; // Poner Token
+        $token = 'apis-token-16396.hrcKuFHmiYP6WU1oPcsF7FRtfea7DoDI'; // Poner Token
 
         $curl = curl_init();
         curl_setopt_array($curl, [

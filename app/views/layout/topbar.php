@@ -50,60 +50,63 @@
                   <div class="dropdown-menu dropdown-menu-end p-0">
                     <div class="dropdown-menu-header border-bottom">
                       <div class="dropdown-header d-flex align-items-center py-3">
-                        <h6 class="mb-0 me-auto">Shortcuts</h6>
-                        <a href="javascript:void(0)" class="dropdown-shortcuts-add py-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Add shortcuts" data-bs-original-title="Add shortcuts"><i class="icon-base bx bx-plus-circle text-heading"></i></a>
+                        <h6 class="mb-0 me-auto">Atajos</h6>
                       </div>
                     </div>
                     <div class="dropdown-shortcuts-list scrollable-container ps">
+                      
                       <div class="row row-bordered overflow-visible g-0">
                         <div class="dropdown-shortcuts-item col">
                           <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                          <i class="icon-base bx bx-calendar icon-26px text-heading"></i>
+                          <i class="icon-base bx bx-receipt icon-26px text-heading"></i>
                           </span>
-                          <a href="app-calendar.html" class="stretched-link">Calendar</a>
-                          <small>Appointments</small>
+                          <a href="<?= BASE_URL('reportes/movimientos') ?>" class="stretched-link">Reportes</a>
+                          <small>Gestionar Reportes de las operaciones</small>
                         </div>
                         <div class="dropdown-shortcuts-item col">
                           <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                          <i class="icon-base bx bx-food-menu icon-26px text-heading"></i>
+                          <i class="icon-base bx bx-pie-chart-alt-2 icon-26px text-heading"></i>
                           </span>
-                          <a href="app-invoice-list.html" class="stretched-link">Invoice App</a>
-                          <small>Manage Accounts</small>
+                          <a href="<?= BASE_URL('auth/home') ?>" class="stretched-link">Dashboard</a>
+                          <small>Panel de Usuario</small>
                         </div>
                       </div>
+                      
                       <div class="row row-bordered overflow-visible g-0">
                         <div class="dropdown-shortcuts-item col">
                           <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                           <i class="icon-base bx bx-user icon-26px text-heading"></i>
                           </span>
-                          <a href="app-user-list.html" class="stretched-link">User App</a>
-                          <small>Manage Users</small>
+                          <a href="<?= BASE_URL('seguridad/usuario') ?>" class="stretched-link">Usuarios</a>
+                          <small>Gestionar usuarios</small>
                         </div>
                         <div class="dropdown-shortcuts-item col">
                           <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                           <i class="icon-base bx bx-check-shield icon-26px text-heading"></i>
                           </span>
-                          <a href="app-access-roles.html" class="stretched-link">Role Management</a>
-                          <small>Permission</small>
+                          <a href="<?= BASE_URL('seguridad/rol') ?>" class="stretched-link">Roles</a>
+                          <small>Gestionar Roles y Permisos</small>
                         </div>
                       </div>
+
                       <div class="row row-bordered overflow-visible g-0">
                         <div class="dropdown-shortcuts-item col">
                           <span class="dropdown-shortcuts-icon rounded-circle mb-3">
-                          <i class="icon-base bx bx-pie-chart-alt-2 icon-26px text-heading"></i>
+                          <i class="icon-base bx bx bx-building icon-26px text-heading"></i>
                           </span>
-                          <a href="index.html" class="stretched-link">Dashboard</a>
-                          <small>User Dashboard</small>
+                          <a href="" class="stretched-link">Datos de empresa</a>
+                          <small>Gestionar Información</small>
                         </div>
                         <div class="dropdown-shortcuts-item col">
                           <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                           <i class="icon-base bx bx-cog icon-26px text-heading"></i>
                           </span>
-                          <a href="pages-account-settings-account.html" class="stretched-link">Setting</a>
-                          <small>Account Settings</small>
+                          <a href="<?= BASE_URL('seguridad/perfil') ?>" class="stretched-link">Setting</a>
+                          <small>Configuración de cuenta</small>
                         </div>
                       </div>
-                      <div class="row row-bordered overflow-visible g-0">                        
+
+                      <!--<div class="row row-bordered overflow-visible g-0">                        
                         <div class="dropdown-shortcuts-item col">
                           <span class="dropdown-shortcuts-icon rounded-circle mb-3">
                           <i class="icon-base bx bx-window-open icon-26px text-heading"></i>
@@ -111,7 +114,8 @@
                           <a href="modal-examples.html" class="stretched-link">Modals</a>
                           <small>Useful Popups</small>
                         </div>
-                      </div>
+                      </div>-->
+
                       <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
                         <div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div>
                       </div>
@@ -349,7 +353,7 @@
                       <div class="dropdown-divider my-1"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href=""> <i class="icon-base bx bx-user icon-md me-3"></i><span>My Profile</span> </a>
+                      <a class="dropdown-item" href="<?= BASE_URL('seguridad/perfil') ?>"> <i class="icon-base bx bx-user icon-md me-3"></i><span>My Profile</span> </a>
                     </li>                    
                                         
                     <li>

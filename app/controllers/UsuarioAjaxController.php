@@ -14,6 +14,7 @@ class UsuarioAjaxController extends Controller{
                 'ini_nombre'        => strtoupper($usuario['nombre_usuario'][0]),
                 'correo'            => $usuario['correo'],
                 'rol'               => $usuario['rol'],
+                'sucursal'          => $usuario['sucursal'],
                 'activo'            => $usuario['activo'] === 1 ? 1 : 2
             ];
         }
@@ -41,16 +42,29 @@ class UsuarioAjaxController extends Controller{
             $apellido = $_POST['apellido'] ?? '';
             $dni = $_POST['dni'] ?? '';
             $direccion = $_POST['direccion'] ?? '';
+            $dep = trim($_POST['departamento'] ?? '');
+            $prov = trim($_POST['provincia'] ?? '');
+            $dis = trim($_POST['distrito'] ?? '');
             $telefono = $_POST['telefono'] ?? '';
             $correo = $_POST['correo'] ?? '';
             $usuario = mb_strtolower(trim($_POST['usuario'] ?? ''));
             $idRol = $_POST['id_rol'] ?? 0;
+            $idSucursalPost = $_POST['id_sucursal'] ?? null;
             $fechaLimite = $_POST['fecha_limite'] ?? null;
-
+            
             //validación básica
-            if (!$nombre || !$apellido || !$dni || !$direccion || !$telefono || !$correo || !$usuario || !$idRol) {
+            if (!$nombre || !$apellido || !$dni || !$direccion || !$dep || !$prov || !$dis || !$telefono || !$correo || !$usuario || !$idRol) {
                 echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios.']);
                 return;
+            }
+
+            // IdSucursal Si NO es admin, se toma el valor del formulario
+            $idSucursal = (intval($idRol) === 1 || intval($idRol) === 2) ? null : $idSucursalPost;            
+
+            // Si NO es administrador, debe elegir sucursal
+            if ((intval($idRol) !== 1 && intval($idRol) !== 2) && (!$idSucursal || $idSucursal === '')) {
+            echo json_encode(['success' => false, 'message' => 'Faltan datos. Se debe asignar una sucursal ❌']);
+            return;
             }
 
             //Validar y normalizar fecha
@@ -60,7 +74,7 @@ class UsuarioAjaxController extends Controller{
             $contrasena = password_hash($dni, PASSWORD_ARGON2ID);
 
             $model = $this->model('UsuarioModel');
-            $resultado = $model->registrarUsuario($nombre,$apellido,$dni,$direccion,$telefono,$correo,$usuario,$contrasena,$idRol,$fechaLimite);
+            $resultado = $model->registrarUsuario($nombre,$apellido,$dni,$direccion,$telefono,$correo,$usuario,$contrasena,$idRol,$idSucursal,$dep,$prov,$dis,$fechaLimite);
             echo json_encode(['success' => $resultado]);
         }
     }
@@ -87,17 +101,36 @@ class UsuarioAjaxController extends Controller{
             $apellido = $_POST['apellido'];
             $dni = $_POST['dni'];
             $direccion = $_POST['direccion'];
+            $dep = $_POST['departamento'];
+            $prov = $_POST['provincia'];
+            $dis = $_POST['distrito'];            
             $telefono = $_POST['telefono'];
             $correo = $_POST['correo'];
             $usuario = mb_strtolower(trim($_POST['usuario']));
-            $idRol = $_POST['id_rol'];            
+            $idRol = $_POST['id_rol'];
+            $idSucursalPost = $_POST['id_sucursal'] ?? null;
             $fechaLimite = $_POST['fecha_limite'] ?? null;
+
+            //validación básica
+            if (!$nombre || !$apellido || !$dni || !$direccion || !$dep || !$prov || !$dis || !$telefono || !$correo || !$usuario || !$idRol) {
+                echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios.']);
+                return;
+            }
+
+            // IdSucursal Si NO es admin, se toma el valor del formulario
+            $idSucursal = (intval($idRol) === 1 || intval($idRol) === 2) ? null : $idSucursalPost;
+
+            // Si NO es administrador, debe elegir sucursal
+            if ((intval($idRol) !== 1 && intval($idRol) !== 2) && (!$idSucursal || $idSucursal === '')) {
+            echo json_encode(['success' => false, 'message' => 'Faltan datos. Se debe asignar una sucursal ❌']);
+            return;
+            }
 
             // Parse fecha (puede venir vacía o con valor)
             $fechaLimite = !empty($fechaLimite) ? date('Y-m-d H:i:s', strtotime($fechaLimite)) : null;
 
             $model = $this->model('UsuarioModel');
-            $resultado = $model->actualizarDatos($id, $nombre, $apellido, $dni, $direccion, $telefono, $correo, $usuario, $idRol, $fechaLimite);
+            $resultado = $model->actualizarDatos($id, $nombre, $apellido, $dni, $direccion, $telefono, $correo, $usuario, $idRol, $idSucursal,$dep,$prov,$dis, $fechaLimite);
 
             echo json_encode(['success' => $resultado]);
         }
@@ -111,7 +144,16 @@ class UsuarioAjaxController extends Controller{
         $roles = $model->listarRolesActivos();
         echo json_encode($roles);
     }
-    
+    public function listar_sucursales(){
+        $model = $this->model('SucursalModel');
+        $sucursales = $model->listarSucursales();
+        echo json_encode($sucursales);
+    }
+    public function listar_roles_1(){
+        $model = $this->model('RolModel');
+        $roles = $model->listarRolesActivos1();
+        echo json_encode($roles);
+    }
     public function listar_estados1(){
         $model = $this->model('UsuarioModel');
         $estados = $model->listarEstados1();

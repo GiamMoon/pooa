@@ -1,6 +1,5 @@
 <?php
-class ProductoAjaxController extends Controller {
-
+class ProductoAjaxController extends Controller {   
     public function listar(){
         $model = $this->model('ProductoModel');
         $productos = $model->listarProductos();
@@ -13,43 +12,95 @@ class ProductoAjaxController extends Controller {
                 'url_imagen'            => $producto['url_imagen'],
                 'nombre_producto'       => $producto['nombre_producto'],
                 'nombre_categoria'      => $producto['nombre_categoria'],
-                'nombre_marca'          => $producto['nombre_marca'],
-                'modelos_compatibles'   => $producto['modelos_compatibles'],
-                'precio_venta'          => (int)$producto['precio_venta'],
+                'nombre_marca'          => $producto['nombre_marca'],                
+                'precio_venta'          => (float)$producto['precio_venta'],
                 'activo'                => $producto['activo'] === 1 ? 1 : 2
             ];
         }
         echo json_encode(["data" => $data]);
     }
 
-    public function registrar(){
+    public function registrar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                // Validar datos básicos
+                $idCategoria = $_POST['id_categoria'] ?? null;
+                $idMarca = $_POST['id_marca'] ?? null;
+                $idUnidad = $_POST['id_tipo_unidad'] ?? null;
+                $nombre = mb_strtoupper(trim($_POST['nombre'] ?? ''));
+                $descripcion = $_POST['descripcion'] ?? null;
+                $pVenta = $_POST['precio_venta'] ?? 0.00;
 
-            $idCategoria = $_POST['id_categoria'] ?? null;
-            $idMarca = $_POST['id_marca'] ?? null;
-            $idUnidad = $_POST['id_tipo_unidad'] ?? null;
-            $nombre = mb_strtoupper(trim($_POST['nombre'] ?? ''));
-            $imagen = $_POST['url_imagen'] ?? null;
-            $descripcion = $_POST['descripcion'] ?? null;
-            $pVenta = $_POST['precio_venta'] ?? null;
-            $cantidadMin = $_POST['cantidad_min'] ?? null;
-            $cantidadMax = $_POST['cantidad_max'] ?? null;
-            $asignaciones = $_POST['json_modelos'] ?? '[]';
+                if (empty($nombre) || empty($idCategoria) || empty($idMarca) || empty($idUnidad)) {
+                    throw new Exception('Faltan datos obligatorios');
+                }
 
-            //validación básica
-            if (!$nombre || !$idCategoria || !$idMarca || !$idUnidad || !$cantidadMin || !$cantidadMax || !$asignaciones) {
-                echo json_encode(['success' => false, 'message' => 'Faltan datos obligatorios.']);
-                return;
+                $model = $this->model('ProductoModel');
+
+                // Procesar imagen si existe
+                $imagenNombre = null;
+                $hasImage = isset($_FILES['url_imagen']) && $_FILES['url_imagen']['error'] === UPLOAD_ERR_OK;
+
+                if ($hasImage) {
+                    $file = $_FILES['url_imagen'];
+                    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                    
+                    if (!in_array($ext, ['jpg', 'jpeg', 'png', 'webp'])) {
+                        throw new Exception('Formato de imagen no válido. Use JPG, PNG o WEBP.');
+                    }
+                }
+
+                // Registrar producto primero (sin imagen)
+                $result = $model->registrarProducto(
+                    $idCategoria, $idMarca, $idUnidad, $nombre, $descripcion, null, $pVenta
+                );
+
+                if (!$result['success'] || empty($result['codigo'])) {
+                    throw new Exception('Error al registrar el producto');
+                }
+
+                $codigoGenerado = $result['codigo'];
+
+                // Procesar imagen después de registrar el producto
+                if ($hasImage) {
+                    $uploadDir = __DIR__ . '/../../public/uploads/products/';
+                    
+                    // Crear directorio si no existe
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0755, true);
+                    }
+
+                    $filename = $codigoGenerado . '.' . $ext;
+                    $targetPath = $uploadDir . $filename;
+
+                    if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                        throw new Exception('Error al guardar la imagen');
+                    }
+
+                    // Actualizar producto con el nombre de la imagen
+                    if (!$model->actualizarImagenProducto($codigoGenerado, $filename)) {
+                        throw new Exception('Error al actualizar la imagen del producto');
+                    }
+                }
+
+                echo json_encode(['success' => true, 'codigo' => $codigoGenerado]);
+                
+            } catch (Exception $e) {
+                error_log("Error en registro de producto: " . $e->getMessage());
+                echo json_encode([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ]);
             }
-
-            $model = $this->model('ProductoModel');
-            $resultado = $model->registrarProducto($idCategoria,$idMarca,$idUnidad,$nombre,$descripcion,$imagen,$pVenta,$cantidadMin,$cantidadMax, $asignaciones);
-            echo json_encode(['success' => $resultado]);
         }
     }
 
 
-        public function listar_motos_modelos(){
+    
+    
+    
+    
+    public function listar_motos_modelos(){
         $model = $this->model('ProductoModel');
         $productos = $model->listarMotosconModelos();
         
@@ -71,5 +122,21 @@ class ProductoAjaxController extends Controller {
         }
 
         echo json_encode(array_values($datos));
+    }
+    private function guardarimagenProducto($file, $codigo_producto) {
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            return null;
+        }
+        $directorio_destino = 'uploads/products/';
+        if (!is_dir($directorio_destino)) {
+            mkdir($directorio_destino, 0777, true);
+        }
+        $nombre_archivo = "{$codigo_producto}" . uniqid() . '_' . basename($file['name']);
+        $ruta_destino = $directorio_destino . $nombre_archivo;
+        
+        if (move_uploaded_file($file['tmp_name'], $ruta_destino)) {
+            return $ruta_destino;
+        }
+        return null;
     }
 }

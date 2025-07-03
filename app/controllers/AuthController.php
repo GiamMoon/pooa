@@ -75,9 +75,7 @@ class AuthController extends Controller{
                 $this->renderAuthView('auth/change',['title' => 'Actualizar Contraseña', 'subtitle' => 'Por seguridad, debes actualizar tu contraseña antes de continuar.' ]); 
             }else{                 
                 $_SESSION['usuario'] = $datos['nombre_usuario'];
-                //$_SESSION['permisos'] = $permisos;
-                //return $this->redirect('home');
-                
+                $_SESSION['id_rol'] = $datos['id_rol'];                
 
                 // Generate 2FA code
                 $code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -198,7 +196,7 @@ class AuthController extends Controller{
                 // Success: log in the user
                 $_SESSION['id_usuario'] = $_SESSION['2fa_user'];
                 $_SESSION['correo'] = $_SESSION['2fa_email'];;
-
+                
                 //Obtener datos y permisos
                 $permisos = $this->usuarioModel->obtenerPermisosUsuario($_SESSION['id_usuario']);
                 $_SESSION['permisos'] = $permisos;

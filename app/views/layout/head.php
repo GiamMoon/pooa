@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title><?= $title ?? 'Mi sitio' ?></title>
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/favicon/favicon.ico') ?>" />
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <!-- build:css assets/vendor/css/theme.css  -->
+    <!-- build:css assets/vendor/css/theme.css -->
     <link rel="stylesheet" href="<?= base_url('assets/vendor/libs/pickr/pickr-themes.css') ?>" />
     <link rel="stylesheet" href="<?= base_url('assets/vendor/css/core.css') ?>" /> 
     <link rel="stylesheet" href="<?= base_url('assets/css/demo.css') ?>" />
@@ -40,5 +40,8 @@
     <script src="<?= base_url('assets/vendor/js/template-customizer.js') ?>"></script> -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="<?= base_url('assets/js/config.js') ?>"></script>
-  </head>
-   
+
+    <script>
+        const site_url = "<?= base_url() ?>";
+    </script>
+</head>

@@ -15,11 +15,8 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
     }
     return false;
 }
-
-//echo '<pre>'; print_r($_SESSION['permisos']); echo '</pre>';
 ?>
 <!-- Menu -->
-
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo ">
             <a href="" class="app-brand-link">
@@ -36,23 +33,12 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                       <g id="Brand-Logo" transform="translate(-27.000000, -15.000000)">
                         <g id="Icon" transform="translate(27.000000, 15.000000)">
                           <g id="Mask" transform="translate(0.000000, 8.000000)">
-                            <mask id="mask-2" fill="white">
-                              <use xlink:href="#path-1"></use>
-                            </mask>
+                            <mask id="mask-2" fill="white"><use xlink:href="#path-1"></use></mask>
                             <use fill="currentColor" xlink:href="#path-1"></use>
-                            <g id="Path-3" mask="url(#mask-2)">
-                              <use fill="currentColor" xlink:href="#path-3"></use>
-                              <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-3"></use>
-                            </g>
-                            <g id="Path-4" mask="url(#mask-2)">
-                              <use fill="currentColor" xlink:href="#path-4"></use>
-                              <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-4"></use>
-                            </g>
+                            <g id="Path-3" mask="url(#mask-2)"><use fill="currentColor" xlink:href="#path-3"></use><use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-3"></use></g>
+                            <g id="Path-4" mask="url(#mask-2)"><use fill="currentColor" xlink:href="#path-4"></use><use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-4"></use></g>
                           </g>
-                          <g id="Triangle" transform="translate(19.000000, 11.000000) rotate(-300.000000) translate(-19.000000, -11.000000) ">
-                            <use fill="currentColor" xlink:href="#path-5"></use>
-                            <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-5"></use>
-                          </g>
+                          <g id="Triangle" transform="translate(19.000000, 11.000000) rotate(-300.000000) translate(-19.000000, -11.000000) "><use fill="currentColor" xlink:href="#path-5"></use><use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-5"></use></g>
                         </g>
                       </g>
                     </g>
@@ -61,11 +47,9 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
               </span>
               <span class="app-brand-text demo menu-text fw-bold ms-2">Repuestos</span>
             </a>
-            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
-            <i class="icon-base bx bx-chevron-left"></i>
-            </a>
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto"><i class="icon-base bx bx-chevron-left"></i></a>
           </div>
-          <div class="menu-divider mt-0  "></div>
+          <div class="menu-divider mt-0"></div>
           <div class="menu-inner-shadow"></div>
           <ul class="menu-inner py-1">
             <li class="menu-item <?= ($activePage === 'home') ? 'active open' : '' ?>">
@@ -76,9 +60,7 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
               </a>
             </li>
 
-
             <!-- Modulos disponibles -->
-
             <!-- Inventario -->
             <?php if(tienePermiso('inventario')): ?>
             <li class="menu-item <?= ($openMenu === 'inventario') ? 'open' : '' ?>">
@@ -96,34 +78,35 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                   </li>
                 <?php endif; ?>
 
-                <?php if(tienePermiso('inventario/unidad')): ?>
-                <li class="menu-item <?= ($activePage === 'unidad') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>inventario/unidad" class="menu-link">
-                    <div class="text-truncate" data-i18n="Analytics">Tipos de unidad</div> 
-                  </a>
-                </li>
+                <?php if(tienePermiso('inventario/movimientos')): ?>
+                  <li class="menu-item <?= ($activePage === 'movimientos') ? 'active' : '' ?>">
+                    <a href="<?= BASE_URL ?>inventario/movimientos" class="menu-link">
+                      <div class="text-truncate" data-i18n="Analytics">Historial de Movimientos</div> 
+                    </a>
+                  </li>
                 <?php endif; ?>
+
+                <?php if(tienePermiso('inventario/transferencias')): ?>
+                  <li class="menu-item <?= ($activePage === 'transferencias') ? 'active' : '' ?>">
+                    <a href="<?= BASE_URL ?>inventario/transferencias" class="menu-link">
+                      <div class="text-truncate" data-i18n="Analytics">Transferencias</div> 
+                    </a>
+                  </li>
+                <?php endif; ?>
+
+
+                <?php if(tienePermiso('inventario/recepcion')): ?>
+                  <li class="menu-item <?= ($activePage === 'recepcion_compras') ? 'active' : '' ?>">
+                    <a href="<?= BASE_URL ?>inventario/recepcion" class="menu-link">
+                      <div class="text-truncate" data-i18n="Analytics">Recepción de Compras</div> 
+                    </a>
+                  </li>
+                <?php endif; ?>                
 
                 <?php if(tienePermiso('inventario/ubicacion')): ?>
                 <li class="menu-item <?= ($activePage === 'ubicacion') ? 'active' : '' ?>" >
                   <a href="<?= BASE_URL ?>inventario/ubicacion" class="menu-link">
                     <div class="text-truncate" data-i18n="Analytics">Ubicaciones</div> 
-                  </a>
-                </li>
-                <?php endif; ?>
-
-                <?php if(tienePermiso('inventario/categoria')): ?>
-                <li class="menu-item <?= ($activePage === 'categoria') ? 'active' : '' ?>">
-                  <a href="<?= BASE_URL ?>inventario/categoria" class="menu-link">
-                    <div class="text-truncate" data-i18n="CRM">Categorías</div> 
-                  </a>
-                </li>
-                <?php endif; ?>
-
-                <?php if(tienePermiso('inventario/marca')): ?>
-                <li class="menu-item <?= ($activePage === 'marca') ? 'active' : '' ?>">
-                  <a href="<?= BASE_URL ?>inventario/marca" class="menu-link">
-                    <div class="text-truncate" data-i18n="eCommerce">Marcas</div> 
                   </a>
                 </li>
                 <?php endif; ?>
@@ -135,22 +118,66 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                   </a>
                 </li>
                 <?php endif; ?>
-
                 <?php if(tienePermiso('inventario/modelo')): ?>
                 <li class="menu-item <?= ($activePage === 'modelo') ? 'active' : '' ?>">
                   <a href="<?= BASE_URL ?>inventario/modelo" class="menu-link">
                     <div class="text-truncate" data-i18n="eCommerce">Modelos</div> 
                   </a>
                 </li>
-                <?php endif; ?>
+                <?php endif; ?>                
+                
+              </ul>
+            </li>
+            <?php endif; ?>
 
-                <?php if(tienePermiso('inventario/producto')): ?>
+            <!-- Productos -->
+            <?php if(tienePermiso('productos')): ?>
+            <li class="menu-item <?= ($openMenu === 'productos') ? 'open' : '' ?>">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-package"></i>
+                <div class="text-truncate" data-i18n="Dashboards">Productos</div>                
+              </a>
+              <ul class="menu-sub">                                                            
+
+                <?php if(tienePermiso('productos/producto')): ?>
                 <li class="menu-item <?= ($activePage === 'producto') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>inventario/producto" class="menu-link">
+                  <a href="<?= BASE_URL ?>productos/producto" class="menu-link">
                     <div class="text-truncate" data-i18n="Analytics">Productos</div> 
                   </a>
                 </li>
                 <?php endif; ?>
+                
+                <?php if(tienePermiso('productos/stock_actual')): ?>
+                  <li class="menu-item <?= ($activePage === 'stock_actual') ? 'active' : '' ?>">
+                    <a href="<?= BASE_URL ?>productos/stock_actual" class="menu-link">
+                      <div class="text-truncate" data-i18n="Analytics">Stock Actual</div> 
+                    </a>
+                  </li>
+                <?php endif; ?>                  
+
+                <?php if(tienePermiso('productos/unidad')): ?>
+                <li class="menu-item <?= ($activePage === 'unidad') ? 'active' : '' ?>" >
+                  <a href="<?= BASE_URL ?>productos/unidad" class="menu-link">
+                    <div class="text-truncate" data-i18n="Analytics">Tipos de unidad</div> 
+                  </a>
+                </li>
+                <?php endif; ?>
+
+                <?php if(tienePermiso('productos/categoria')): ?>
+                <li class="menu-item <?= ($activePage === 'categoria') ? 'active' : '' ?>">
+                  <a href="<?= BASE_URL ?>productos/categoria" class="menu-link">
+                    <div class="text-truncate" data-i18n="CRM">Categorías</div> 
+                  </a>
+                </li>
+                <?php endif; ?>
+
+                <?php if(tienePermiso('productos/marca')): ?>
+                <li class="menu-item <?= ($activePage === 'marca') ? 'active' : '' ?>">
+                  <a href="<?= BASE_URL ?>productos/marca" class="menu-link">
+                    <div class="text-truncate" data-i18n="eCommerce">Marcas</div> 
+                  </a>
+                </li>
+                <?php endif; ?>                                                                
                 
               </ul>
             </li>
@@ -168,7 +195,7 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                 <?php if(tienePermiso('ventas/index')): ?>
                 <li class="menu-item <?= ($activePage === 'index') ? 'active' : '' ?>" >
                   <a href="<?= BASE_URL ?>ventas/index" class="menu-link">
-                    <div class="text-truncate" data-i18n="Landing">Historial Vts.</div>
+                    <div class="text-truncate" data-i18n="Landing">Listado de ventas</div>
                   </a>
                 </li>
                 <?php endif; ?>
@@ -180,6 +207,22 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                   </a>
                 </li>
                 <?php endif; ?>
+
+                <?php //if(tienePermiso('ventas/crear')): ?>
+                <li class="menu-item <?= ($activePage === 'crear') ? 'active' : '' ?>" >
+                  <a href="<?= BASE_URL ?>ventas/create" class="menu-link">
+                    <div class="text-truncate" data-i18n="Without menu">Nueva venta</div>
+                  </a>
+                </li>
+                <?php //endif; ?>
+                
+                <?php if(tienePermiso('ventas/cliente')): ?>
+                <li class="menu-item <?= ($activePage === 'cliente') ? 'active' : '' ?>" >
+                  <a href="<?= BASE_URL ?>ventas/cliente" class="menu-link">
+                    <div class="text-truncate" data-i18n="Container">Clientes</div>
+                  </a>
+                </li>
+                <?php endif; ?>
                 
                 <?php if(tienePermiso('ventas/comprobante')): ?>
                 <li class="menu-item <?= ($activePage === 'emitir_comprobante') ? 'active' : '' ?>" >
@@ -187,24 +230,14 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                     <div class="text-truncate" data-i18n="Without navbar">Emitir Comprobante</div>
                   </a>
                 </li>
-                <?php endif; ?>
+                <?php endif; ?>                                
                 
-                <?php if(tienePermiso('ventas/cotizacion')): ?>
-                <li class="menu-item <?= ($activePage === 'cotizacion') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>ventas/cotizacion" class="menu-link">
-                    <div class="text-truncate" data-i18n="Container">Cotizacion</div>
+                <li class="menu-item <?= ($activePage === 'caja') ? 'active' : '' ?>" >
+                  <a href="<?= BASE_URL ?>ventas/caja" class="menu-link">
+                    <div class="text-truncate" data-i18n="Without navbar">Caja</div>
                   </a>
                 </li>
-                <?php endif; ?>
-                
-                <?php if(tienePermiso('ventas/pedidos')): ?>
-                <li class="menu-item <?= ($activePage === 'pedidos') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>ventas/pedidos" class="menu-link">
-                    <div class="text-truncate" data-i18n="Container">Pedidos</div>
-                  </a>
-                </li>
-                <?php endif; ?>
-                
+
               </ul>
             </li>
             <?php endif; ?>
@@ -225,28 +258,55 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                   </a>
                 </li>
                 <?php endif; ?>
-                
-                
-                <?php if(tienePermiso('compra/proveedor')): ?>
-                <li class="menu-item <?= ($activePage === 'proveedor') ? 'active' : '' ?>" >
-                <a href="<?= BASE_URL ?>compra/proveedor" class="menu-link">
-                    <div class="text-truncate" data-i18n="Pricing">Proveedores</div>
-                  </a>
-                </li>
-                <?php endif; ?>              
+                            
 
               </ul>
             </li>
             <?php endif; ?>
 
-            <!-- Reportes -->
-            <?php if(tienePermiso('reportes')): ?>
-            <li class="menu-item <?= ($openMenu === 'reportes') ? 'open' : '' ?>">
+            <!-- contactos -->
+            <?php if(tienePermiso('contactos')): ?>
+            <li class="menu-item <?= ($openMenu === 'contactos') ? 'open' : '' ?>">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-chart"></i>
-                <div class="text-truncate" data-i18n="Front Pages">Reportes</div>
+                <i class="menu-icon tf-icons bx bx-book"></i>
+                <div class="text-truncate" data-i18n="Layouts">Contactos</div>
               </a>
-              <ul class="menu-sub">                           
+              <ul class="menu-sub">
+                <?php if(tienePermiso('contactos/clientes')): ?>
+                <li class="menu-item <?= ($activePage === 'clientes') ? 'active' : '' ?>" >
+                  <a href="<?= BASE_URL ?>contactos/clientes" class="menu-link">
+                    <div class="text-truncate" data-i18n="Landing">Clientes</div>
+                  </a>
+                </li>
+                <?php endif; ?>
+                <?php if(tienePermiso('contactos/proveedor')): ?>
+                <li class="menu-item <?= ($activePage === 'proveedor') ? 'active' : '' ?>" >
+                <a href="<?= BASE_URL ?>contactos/proveedores" class="menu-link">
+                    <div class="text-truncate" data-i18n="Pricing">Proveedores</div>
+                  </a>
+                </li>
+                <?php endif; ?>              
+              </ul>
+            </li>
+            <?php endif; ?>            
+
+            <!-- Reportes-->
+            <?php if(tienePermiso('reportes')): ?>
+              <li class="menu-item <?= ($openMenu === 'reportes') ? 'open' : '' ?>">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                  <i class="menu-icon tf-icons bx bx-chart"></i>
+                  <div class="text-truncate" data-i18n="Front Pages">Reportes</div>
+                </a>
+                <ul class="menu-sub">                       
+                
+                <?php if(tienePermiso('reportes/movimientos')): ?>
+                  <li class="menu-item <?= ($activePage === 'reporte_movimientos') ? 'active' : '' ?>" >
+                    <a href="<?= BASE_URL ?>reportes/movimientos" class="menu-link">
+                      <div class="text-truncate" data-i18n="Pricing">Reporte de Movimientos</div>
+                    </a>
+                  </li>
+                <?php endif; ?>
+                                                            
                 
                 <?php if(tienePermiso('reportes/registroventa')): ?>
                 <li class="menu-item <?= ($activePage === 'registro_ventas') ? 'active' : '' ?>" >
@@ -276,26 +336,18 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
             </li>
             <?php endif; ?>
 
-            <!-- Administración -->
-            <?php if(tienePermiso('administracion')): ?>
-            <li class="menu-item <?= ($openMenu === 'administracion') ? 'open' : '' ?>">
+            <!-- Administración Arreglar -->
+            <?php if(tienePermiso('admi')): ?>
+            <li class="menu-item <?= ($openMenu === 'admi') ? 'open' : '' ?>">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-buildings"></i>
                 <div class="text-truncate" data-i18n="Front Pages">Administración</div>
               </a>
-              <ul class="menu-sub">
-                
-                <?php if(tienePermiso('seguridad/empresa')): ?>
-                <li class="menu-item <?= ($activePage === 'empresa') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>administracion/empresa" class="menu-link">
-                    <div class="text-truncate" data-i18n="Landing">Empresa</div>
-                  </a>
-                </li>
-                <?php endif; ?>
+              <ul class="menu-sub">                                
                 
                 <?php if(tienePermiso('seguridad/clientes')): ?>
                 <li class="menu-item <?= ($activePage === 'clientes') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>administracion/clientes" class="menu-link">
+                  <a href="<?= BASE_URL ?>admi/clientes" class="menu-link">
                     <div class="text-truncate" data-i18n="Pricing">Clientes</div>
                   </a>
                 </li>
@@ -303,7 +355,7 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                 
                 <?php if(tienePermiso('seguridad/proveedores')): ?>
                 <li class="menu-item <?= ($activePage === 'proveedores') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>administracion/proveedores" class="menu-link">
+                  <a href="<?= BASE_URL ?>admi/proveedores" class="menu-link">
                     <div class="text-truncate" data-i18n="Payment">Proveedores</div>
                   </a>
                 </li>
@@ -311,7 +363,7 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                 
                 <?php if(tienePermiso('seguridad/tipocomprobante')): ?>
                 <li class="menu-item <?= ($activePage === 'tipo_comprobante') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>administracion/tipo_comprobante" class="menu-link">
+                  <a href="<?= BASE_URL ?>admi/tipo_comprobante" class="menu-link">
                     <div class="text-truncate" data-i18n="Checkout">Tipo de Comprobante</div>
                   </a>
                 </li>
@@ -319,7 +371,7 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                 
                 <?php if(tienePermiso('seguridad/tipoafectacion')): ?>
                 <li class="menu-item <?= ($activePage === 'tipo_afectacion') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>administracion/tipo_afectacion" class="menu-link">
+                  <a href="<?= BASE_URL ?>admi/tipo_afectacion" class="menu-link">
                     <div class="text-truncate" data-i18n="Checkout">Tipo de Afectación</div>
                   </a>
                 </li>
@@ -327,7 +379,7 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
                 
                 <?php if(tienePermiso('seguridad/series')): ?>
                 <li class="menu-item <?= ($activePage === 'series') ? 'active' : '' ?>" >
-                  <a href="<?= BASE_URL ?>administracion/series" class="menu-link">
+                  <a href="<?= BASE_URL ?>admi/series" class="menu-link">
                     <div class="text-truncate" data-i18n="Checkout">Series</div>
                   </a>
                 </li>
@@ -337,12 +389,12 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
             </li>
             <?php endif; ?>
 
-            <!--SEGURIDAD-->
+            <!--SEGURIDAD Y MANTENIMIENTO-->
             <li class="menu-header small text-uppercase">
               <span class="menu-header-text"></span>
             </li>
             
-            <!-- Panel 1 -->
+            <!-- Panel Seguridad -->
             <?php if(tienePermiso('seguridad')): ?>
             <li class="menu-item <?= ($openMenu === 'seguridad') ? 'open' : '' ?>">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -370,7 +422,43 @@ function tienePermiso($ruta, $permisoEsperado = 'visualizar') {
               </ul>
             </li>
             <?php endif; ?>
+            
+            <!-- Panel Mantenimiento -->
+            <?php if(tienePermiso('administracion')): ?>
+            <li class="menu-item <?= ($openMenu === 'administracion') ? 'open' : '' ?>">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-collection"></i>
+                <div class="text-truncate" data-i18n="Front Pages">Administración</div>
+              </a>
+              <ul class="menu-sub">
 
+                <?php if(tienePermiso('administracion/empresa')): ?>
+                <li class="menu-item <?= ($activePage === 'empresa') ? 'active' : '' ?>" >
+                  <a href="<?= BASE_URL ?>administracion/empresa" class="menu-link">
+                    <div class="text-truncate" data-i18n="Landing">Empresa</div>
+                  </a>
+                </li>
+                <?php endif; ?>
+                
+                <?php if(tienePermiso('administracion/sucursal')): ?>
+                <li class="menu-item <?= ($activePage === 'sucursal') ? 'active' : '' ?>" >
+                  <a href="<?= BASE_URL ?>administracion/sucursal" class="menu-link">
+                    <div class="text-truncate" data-i18n="Landing">Sucursales</div>
+                  </a>
+                </li>
+                <?php endif; ?>
+
+                <?php if(tienePermiso('administracion/almacen')): ?>
+                <li class="menu-item <?= ($activePage === 'almacen') ? 'active' : '' ?>" >
+                  <a href="<?= BASE_URL ?>administracion/almacen" class="menu-link">
+                    <div class="text-truncate" data-i18n="Landing">Almacenes</div>
+                  </a>
+                </li>
+                <?php endif; ?>
+
+              </ul>
+            </li>
+            <?php endif; ?>
             
           </ul>
         </aside>

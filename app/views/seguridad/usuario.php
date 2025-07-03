@@ -1,6 +1,7 @@
 <script>
   window.PERMISOS_USUARIO = <?= json_encode($_SESSION['permisos']) ?>;
   window.USUARIO_ACTUAL_ID = <?= json_encode($_SESSION['id_usuario']) ?>;
+  window.USER_ROLE = <?= json_encode($_SESSION['id_rol'] ?? null) ?>;
 </script>
             <!-- Content -->
             <div class="container-xxl flex-grow-1 container-p-y">
@@ -12,10 +13,13 @@
                     <table class="datatables-category-list table">
                       <thead>
                         <tr>                          
-                          <th class="text-nowrap text-sm-start">N°</th>  
+                          <th class="text-center"><input type="checkbox" class="form-check-input select-all" id="selectAll"></th>
                           <th class="text-nowrap text-sm-start">Usuarios</th>
                           <th class="text-nowrap text-sm-start">Correo &nbsp;</th>
                           <th class="text-nowrap text-sm-start">Rol</th>
+                          <?php if (isset($es_admin) && $es_admin === true): ?>
+                            <th class="text-lg-center">Surcusal</th>
+                          <?php endif; ?>                          
                           <th class="text-lg-center">Estado</th>
                           <th class="text-lg-center">Acciones</th>
                         </tr>
@@ -57,7 +61,20 @@
                           <div class="col-12 form-control-validation">
                             <label class="form-label" for="reg-direccion">Dirección</label>
                             <input type="text" maxlength="250" class="form-control" id="reg-direccion" name="direccion" placeholder="Ingrese la Dirección"/>
-                          </div>                          
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label" for="reg-departamento">Departamento</label>
+                            <select id="reg-departamento" name="departamento" class="form-select select2" data-placeholder="Seleccione departamento"></select>
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label" for="reg-provincia">Provincia</label>
+                            <select id="reg-provincia" name="provincia" class="form-select select2" disabled data-placeholder="Seleccione provincia"></select>
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label" for="reg-distrito">Distrito</label>
+                            <select id="reg-distrito" name="distrito" class="form-select select2" disabled data-placeholder="Seleccione distrito"></select>
+                          </div>
+
                           <div class="col-md-6 form-control-validation">
                             <label class="form-label" for="reg-correo">Correo</label>                            
                             <div class="input-group">
@@ -78,6 +95,21 @@
                               <!-- Rellenar dinámicamente -->
                             </select>
                           </div>
+                          
+                          <?php if (isset($es_admin) && $es_admin === true): ?>
+                            <div class="col-md-6 form-control-validation" id="container-sucursal" style="display: none;">
+                              <label for="reg-sucursal" class="form-label">Sucursal</label>
+                              <select id="reg-sucursal" name="id_sucursal" class="form-select select2">
+                                <option value="" disabled selected>Seleccione una sucursal</option>
+                                <?php foreach ($sucursales as $sucursal): ?>
+                                  <option value="<?= htmlspecialchars($sucursal['id_sucursal']) ?>">
+                                    <?= htmlspecialchars($sucursal['nombre_comercial']) ?>
+                                  </option>
+                                <?php endforeach; ?>
+                              </select>
+                            </div>
+                          <?php endif; ?>
+
                           <div class="col-md-6 form-control-validation">
                             <label class="form-label" for="reg-fecha-limite">Fecha Límite (opcional)</label>
                             <input class="form-control" id="reg-fecha-limite" name="fecha_limite" placeholder="Tiempo indefinido">
@@ -125,6 +157,20 @@
                             <label class="form-label">Dirección</label>
                             <input type="text" class="form-control" id="detalle-direccion">
                           </div>
+
+                          <div class="col-md-4">
+                            <label class="form-label">Departamento</label>
+                            <input type="text" id="detalle-departamento" class="form-control">
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label">Provincia</label>
+                            <input type="text" id="detalle-provincia" class="form-control">
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label">Distrito</label>
+                            <input type="text" id="detalle-distrito" class="form-control">
+                          </div>
+
                           <div class="col-md-6">
                             <label class="form-label">Correo</label>
                             <input type="email" class="form-control" id="detalle-correo">
@@ -137,10 +183,16 @@
                             <label class="form-label">Rol</label>
                             <input type="text" class="form-control" id="detalle-rol">
                           </div>
+                          <?php if (isset($es_admin) && $es_admin === true): ?>
+                            <div class="col-md-6">
+                              <label class="form-label">Sucursal</label>
+                              <input type="text" class="form-control" id="detalle-sucursal">                              
+                            </div>
+                          <?php endif; ?>
                           <div class="col-md-6">
                             <label class="form-label">Estado</label>
                             <input type="text" class="form-control" id="detalle-estado">
-                          </div>
+                          </div>                          
                           <div class="col-md-6">
                             <label class="form-label">Fecha Límite (opcional)</label>
                             <input class="form-control" id="detalle-fecha-limite" name="fecha_limite" />
@@ -185,13 +237,25 @@
                             <label class="form-label">Dirección</label>
                             <input type="text" maxlength="250" class="form-control" id="edit-direccion" name="direccion"/>
                           </div>
+                          <div class="col-md-4">
+                            <label class="form-label" for="departamento">Departamento</label>
+                            <select id="departamento" name="departamento" class="form-select select2" data-placeholder="Seleccione departamento"></select>
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label" for="provincia">Provincia</label>
+                            <select id="provincia" name="provincia" class="form-select select2" disabled data-placeholder="Seleccione provincia"></select>
+                          </div>
+                          <div class="col-md-4">
+                            <label class="form-label" for="distrito">Distrito</label>
+                            <select id="distrito" name="distrito" class="form-select select2" disabled data-placeholder="Seleccione distrito"></select>
+                          </div>
+
                           <div class="col-md-6">
                             <label class="form-label">Correo</label>                      
                             <div class="input-group">
                               <input type="email" maxlength="255" class="form-control" id="edit-correo" name="correo"/>
                               <button id="verificarEditcorreo" type="button" class="btn btn-primary"><i class="bx bx-message-check"></i></button>                            
                             </div>
-
                           </div>
                           <div class="col-md-6">
                             <label class="form-label">Usuario</label>                            
@@ -206,12 +270,16 @@
                               <!-- Rellenar dinámicamente -->
                             </select>
                           </div>
-                          <!--<div class="col-md-6">
-                            <label class="form-label">Estado</label>
-                            <select class="form-select" name="id_estado" id="edit-estado">
-                              --><!-- Rellenar dinámicamente -->
-                            <!--</select>
-                          </div>-->
+                          
+                          <?php if (isset($es_admin) && $es_admin === true): ?>
+                            <div class="col-md-6 form-control-validation" id="edit-container-sucursal" style="display: none;">
+                              <label for="edit-sucursal" class="form-label">Sucursal</label>
+                              <select id="edit-sucursal" name="id_sucursal" class="form-select select2">                                
+                              <!-- Rellenar dinámicamente -->
+                              </select>
+                            </div>
+                          <?php endif; ?>                          
+
                           <div class="col-md-6">
                             <label class="form-label">Fecha Límite (opcional)</label>
                             <input class="form-control" id="edit-fecha-limite" name="fecha_limite" />

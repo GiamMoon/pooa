@@ -161,29 +161,15 @@ document.addEventListener("DOMContentLoaded", function () {
           render: (id) => {
             let botones = '';
 
-            // Ver
             if (tienePermisoVista('visualizar')) {
-              botones += `
-                <button class="btn btn-sm btn-icon btn-info" title="Ver" data-id="${id}">
-                  <i class="bx bx-show-alt"></i>
-                </button>`;
+              botones += `<button class="btn btn-sm btn-icon btn-info" title="Ver" data-id="${id}"><i class="bx bx-show-alt"></i></button>`;
             }
 
-            // Solo si tiene editar
-            if (tienePermisoVista('editar')) {
-              botones += `
-                <button class="btn btn-sm btn-icon btn-warning" title="Editar" data-id="${id}">
-                  <i class="bx bx-edit-alt"></i>
-                </button>`;
-            }
+            let deshabilitarEditar = !tienePermisoVista('editar');            
+            botones += `<button class="btn btn-sm btn-icon ${deshabilitarEditar ? 'btn-secondary' : 'btn-warning'}" title="Editar" data-id="${id}" ${deshabilitarEditar ? 'disabled' : ''}><i class="bx bx-edit-alt"></i></button>`;            
 
-            // Solo si tiene eliminar
-            if (tienePermisoVista('eliminar') && parseInt(id) !== 1 && parseInt(id) !== 3) {
-              botones += `
-                <button class="btn btn-sm btn-icon btn-danger" title="Eliminar" data-id="${id}">
-                  <i class="bx bx-git-commit"></i>
-                </button>`;
-            }
+            let deshabilitarEliminar = !tienePermisoVista('eliminar') || parseInt(id) === 1 || parseInt(id) === 3;            
+            botones += `<button class="btn btn-sm btn-icon ${deshabilitarEliminar ? 'btn-secondary' : 'btn-danger'}" title="Eliminar" data-id="${id}" ${deshabilitarEliminar ? 'disabled' : ''}><i class="bx bx-git-commit"></i></button>`;            
 
             return `<div class="d-flex justify-content-center gap-1">${botones}</div>`;
           }
@@ -262,18 +248,27 @@ document.addEventListener("DOMContentLoaded", function () {
   //BLOQUEAR ESPACIOS
   const camposSinEspacios = ['reg-rol-nombre', 'edit-rol-nombre'];
   camposSinEspacios.forEach(id => {
-    const input = document.getElementById(id);
+  const input = document.getElementById(id);
 
-    if (input) {
-      // Bloquear espacios al escribir
-      input.addEventListener('keydown', function(e) {
-        if (e.key === ' ') {
-          e.preventDefault();
-        }
-      });
+  if (input) {
+    input.addEventListener('input', function (e) {
+      let valor = input.value;
 
-    }
-  });
+      // Reemplaza espacios seguidos por uno solo
+      valor = valor.replace(/\s{2,}/g, ' ');
+
+      // Reemplaza un espacio entre palabras por "_"
+      valor = valor.replace(/(\S)\s(\S)/g, '$1_$2');
+
+      // Si termina en espacio y solo hay una palabra, remueve el espacio
+      if (valor.trim().indexOf(' ') === -1 && valor.endsWith(' ')) {
+        valor = valor.trim();
+      }
+
+      input.value = valor;
+    });
+  }
+});
 
 
    /* ---- INICIO: EVENTO VISUALIZAR ---- */
@@ -612,19 +607,25 @@ $(function () {
 
         $('#edit-rol-nombre').val(rol.nombre_rol);
 
-            // Guardar data original para validar cambios
-            originalRolData = {
-              nombre: rol.nombre_rol,              
-              asignaciones: permisosAsignados.map(pa => `${pa.id_recurso}-${pa.id_permiso}`)
-            };
+        // Render permisos (matriz editable)
+        renderMatrizPermisosEditar(todosPermisos, todosRecursos, permisosAsignados);
 
-            // Render permisos (matriz editable)
-            renderMatrizPermisosEditar(todosPermisos, todosRecursos, permisosAsignados);
+        // Guardar data original para validar cambios
+         setTimeout(() => {
+          const asignaciones = [];
+          $('.perm-check:checked').each(function () {
+            asignaciones.push(`${$(this).data('id_recurso')}-${$(this).data('id_permiso')}`);
+          });
 
+          originalRolData = {
+            nombre: rol.nombre_rol,
+            asignaciones: asignaciones.sort()
+          };
+        }, 50);
       })
       .catch(() => {
         $('#editar-estructura-permisos').html('<p class="text-danger">Error al cargar permisos o recursos.</p>');
-      });
+    });
   });
 
   function renderMatrizPermisosEditar(permisos, recursos, permisosAsignados) {
@@ -740,7 +741,6 @@ $(function () {
     verificarRolExistente();
   });
 
-
   function hasRolChanged() {
     const nombreActual = $('#edit-rol-nombre').val().trim();
     if (nombreActual !== (originalRolData.nombre || '').trim()) {
@@ -752,12 +752,13 @@ $(function () {
       asignacionesActuales.push(`${$(this).data('id_recurso')}-${$(this).data('id_permiso')}`);
     });
 
-    const actualesSet = new Set(asignacionesActuales);
-    const originalesSet = new Set(originalRolData.asignaciones);
+    const actualesSorted = asignacionesActuales.sort();
+    const originalesSorted = (originalRolData.asignaciones || []).sort();
 
-    if (actualesSet.size !== originalesSet.size) return true;
-    for (let a of actualesSet) {
-      if (!originalesSet.has(a)) return true;
+    if (actualesSorted.length !== originalesSorted.length) return true;
+    
+    for (let i = 0; i < actualesSorted.length; i++) {
+      if (actualesSorted[i] !== originalesSorted[i]) return true;
     }
 
     return false;
@@ -783,7 +784,6 @@ $(function () {
 
     const idRol = $('#rol-id').val();
     const nombre = $('#edit-rol-nombre').val().trim();
-    const activo = $('#edit-rol-estado').val();
 
     const asignaciones = [];
     $('.perm-check:checked').each(function () {
@@ -800,8 +800,7 @@ $(function () {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         id_rol: idRol,
-        nombre: nombre,
-        activo: activo,
+        nombre: nombre,        
         asignaciones: JSON.stringify(asignaciones)
       })
     })
@@ -823,17 +822,17 @@ $(function () {
       });
   });
 
-  $('#modalEditarRol').on('hide.bs.modal', function (e) {
-    if (!isSubmittingRol && hasRolChanged()) {
-      e.preventDefault(); // bloquear cierre
-
-      const salir = confirm("Hay cambios sin guardar. ¿Deseas salir y perder los cambios?");
-      if (salir) {
-        // evitar bucle
-        $('#modalEditarRol').off('hide.bs.modal');
-        $('#modalEditarRol').modal('hide');
+  $('#modalEditarRol').on('show.bs.modal', function () {
+    $(this).off('hide.bs.modal').on('hide.bs.modal', function (e) {
+      if (!isSubmittingRol && hasRolChanged()) {
+        e.preventDefault();
+        const salir = confirm("Hay cambios sin guardar. ¿Deseas salir y perder los cambios?");
+        if (salir) {
+          $(this).off('hide.bs.modal');
+          $(this).modal('hide');
+        }
       }
-    }
+    });
   });
   /* ---- FIN: EVENTO EDITAR  ---- */
 

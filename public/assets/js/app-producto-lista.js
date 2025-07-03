@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Helper para verificar si el usuario tiene un permiso específico en la vista actual
   const tienePermisoVista = (permisoEsperado) => {
     return permisos.some(p =>
-      p.ruta === 'inventario/producto' && p.permiso === permisoEsperado
+      p.ruta === 'productos/producto' && p.permiso === permisoEsperado
     );
   };
 
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="col-auto">
         <select id="producto-filtro-campo" class="form-select form-select-sm">
           <option value="nombre_producto">Producto</option>
-          <option value="codigo_producto">Código</option>
+          <option value="nombre_marca">Marca</option>
           <option value="nombre_categoria">Categoría</option>
         </select>
       </div>
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
       <div class="col-auto">
         <button id="btnResetProducto" class="btn btn-sm btn-secondary">
-          <i class="bx bx-reset"></i> Limpiar
+          <i class="bx bx-reset"></i>
         </button>
       </div>
     </div>
@@ -71,21 +71,21 @@ document.addEventListener("DOMContentLoaded", function () {
             text: 'Activos',
             className: 'dropdown-item',
             action: function () {
-              tabla.column(7).search('^1$', true, false).draw();
+              tabla.column(6).search('^1$', true, false).draw();
             }
           },
           {
             text: 'Inactivos',
             className: 'dropdown-item',
             action: function () {
-              tabla.column(7).search('^2$', true, false).draw();
+              tabla.column(6).search('^2$', true, false).draw();
             }
           },
           {
             text: 'Todos',
             className: 'dropdown-item',
             action: function () {
-              tabla.column(7).search('').draw();
+              tabla.column(6).search('').draw();
             }
           }
         ]
@@ -106,31 +106,31 @@ document.addEventListener("DOMContentLoaded", function () {
             extend: "print",
             text: `<span class="d-flex align-items-center"><i class="icon-base bx bx-printer me-1"></i>Print</span>`,
             className: "dropdown-item",
-            exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
+            exportOptions: { columns: [1,2,3,4,5,6] }
           },
           {
             extend: "csv",
             text: `<span class="d-flex align-items-center"><i class="icon-base bx bx-file me-1"></i>Csv</span>`,
             className: "dropdown-item",
-            exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
+            exportOptions: { columns: [1,2,3,4,5,6] }
           },
           {
             extend: "excel",
             text: `<span class="d-flex align-items-center"><i class="icon-base bx bxs-file-export me-1"></i>Excel</span>`,
             className: "dropdown-item",
-            exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
+            exportOptions: { columns: [1,2,3,4,5,6] }
           },
           {
             extend: "pdf",
             text: `<span class="d-flex align-items-center"><i class="icon-base bx bxs-file-pdf me-1"></i>Pdf</span>`,
             className: "dropdown-item",
-            exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
+            exportOptions: { columns: [1,2,3,4,5,6] }
           },
           {
             extend: "copy",
             text: `<i class="icon-base bx bx-copy me-1"></i>Copy`,
             className: "dropdown-item",
-            exportOptions: { columns: [0,1,2,3,4,5,6,7,8] }
+            exportOptions: { columns: [1,2,3,4,5,6] }
           }
         ]
       });
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (tienePermisoVista('registrar')) {
       botonesTop.push({
-        text: '<i class="bx bx-plus"></i><span class="d-none d-sm-inline-block">Nuevo Producto</span>',
+        text: '<i class="bx bx-plus"></i><span class="d-none d-sm-inline-block">Registrar</span>',
         className: "add-new btn btn-primary",
         attr: {
           "data-bs-toggle": "modal",//offcanvas
@@ -150,15 +150,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const tabla = new DataTable(dtProductos, {
       ajax: assetsPath + "productoAjax/listar",
       columns: [
-        { data: null },         // Número oculto (control)
-        { data: "url_imagen" },         // Número oculto (control)
-        { data: "nombre_producto" },         // Número oculto (control)
-        { data: "nombre_marca" },         // Número oculto (control)        
-        { data: "nombre_categoria" },         
-        { data: "modelos_compatibles" },         
-        { data: "precio_venta" },         
-        { data: "activo" },             
-        { data: "id_producto" }          
+        { data: null },         // Número oculto (control) 0
+        { data: "url_imagen" },         // imagen 1
+        { data: "nombre_producto" },         //producto 2
+        { data: "nombre_marca" },         // marca 3
+        { data: "nombre_categoria" },         // categoría 4        
+        { data: "precio_venta" },         // precio 5
+        { data: "activo" },             //estado 6
+        { data: "id_producto" }          //id 7
       ],
       columnDefs: [
         {
@@ -175,7 +174,9 @@ document.addEventListener("DOMContentLoaded", function () {
           className: "text-center",
           render: (data, type, row) => {
             if (type === 'display') {
-              const url = row.url_imagen ? `../../uploads/products/${row.url_imagen}` : '../img/illustrations/default.png';
+              const url = row.url_imagen 
+                ? `${assetsPath}uploads/products/${row.url_imagen}` 
+                : `${assetsPath}assets/img/illustrations/default.png`;
               return `<img src="${url}" alt="Img" style="width: 60px; height: auto; border-radius: 6px;">`;
             }
             return data;
@@ -192,17 +193,13 @@ document.addEventListener("DOMContentLoaded", function () {
         {
           targets: 4,
           className: "text-center",          
-        },
+        },        
         {
           targets: 5,
-          className: "text-start",          
-        },
-        {
-          targets: 6,
           className: "text-center",          
         },
         {
-          targets: 7, // ESTADO
+          targets: 6, // ESTADO
           className: "text-center",
           render: (data, type) => {
             if (type === 'display') {
@@ -214,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         },
         {
-          targets: 8, // ACCIONES
+          targets: 7, // ACCIONES
           className: "text-center",
           orderable: false,
           searchable: false,
@@ -253,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
         style: "multi",
         selector: "td:nth-child(2)"
       },
-      order: [[8, "asc"]],
+      order: [[7, "asc"]],
       layout: {
         topStart: {
           rowClass: "row m-3 my-0 justify-content-between",
@@ -298,7 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /* Filtro de estado por defecto = Activo */
-    tabla.column(7).search('^1$', true, false).draw();
+    tabla.column(6).search('^1$', true, false).draw();
     
     /* PARA FILTROS Y BUSQUEDAD*/
     $(document).on("input", "#producto-filtro-valor", function () {
@@ -308,13 +305,13 @@ document.addEventListener("DOMContentLoaded", function () {
       let colIndex = -1;
       switch (campo) {
         case "nombre_producto":
-          colIndex = 1;
-          break;
-        case "codigo_producto":
           colIndex = 2;
           break;
-        case "nombre_categoria":
+        case "nombre_marca":
           colIndex = 3;
+          break;
+        case "nombre_categoria":
+          colIndex = 4;
           break;
       }
 
@@ -328,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
     $(document).on("click", "#btnResetProducto", function () {
       $("#producto-filtro-valor").val("");
       tabla.columns().search('');
-      tabla.column(7).search('^1$', true, false).draw(); // Restaurar a activos
+      tabla.column(6).search('^1$', true, false).draw(); // Restaurar a activos
     });
 
   }
@@ -338,9 +335,6 @@ document.addEventListener("DOMContentLoaded", function () {
   $(function () {
 
     let isSubmitting = false;
-    const selectMarcas = document.getElementById("reg-marcas-moto");
-    const contenedorModelos = document.getElementById("contenedor-marcas-modelos");
-    let modelosPorMarca = {}; // { id_moto: [{id_modelo, nombre, anio, nombre_marca}] }
 
     // Al abrir modal, cargar listas y marcas/modelos
     $('#modalRegistrarProducto').on('show.bs.modal', function () {
@@ -366,73 +360,44 @@ document.addEventListener("DOMContentLoaded", function () {
         selectUni.empty().append('<option value="" disabled selected>Seleccione una Unidad</option>');
         unidades.forEach(u => selectUni.append(`<option value="${u.id_tipo_unidad}">${u.nombre_unidad}</option>`));
       });
-
-      // cargar marcas y modelos
-      fetch(`${assetsPath}productoAjax/listar_motos_modelos`)
-      .then(res => res.json())
-      .then(data => {
-        modelosPorMarca = data.reduce((acc, marca) => {
-          acc[marca.id_moto] = marca.modelos.map(m => ({ ...m, nombre_marca: marca.nombre_marca }));
-          return acc;
-        }, {});
-
-        selectMarcas.innerHTML = '';
-        Object.entries(modelosPorMarca).forEach(([id_moto, modelos]) => {
-          const option = document.createElement("option");
-          option.value = id_moto;
-          option.textContent = modelos[0].nombre_marca;
-          selectMarcas.appendChild(option);
-        });
-
-        $(selectMarcas).val(null).trigger('change').select2({
-          placeholder: "Seleccione una o más marcas",
-          dropdownParent: $('#modalRegistrarProducto')
-        });
-
-        // ✅ Reasignar evento después de aplicar Select2
-        $(selectMarcas).off('change').on('change', function () {
-          const seleccionadas = $(this).val();
-          contenedorModelos.innerHTML = "";
-          if (!seleccionadas || seleccionadas.length === 0) return;
-
-          seleccionadas.forEach(id => {
-            const modelos = modelosPorMarca[id] || [];
-            const bloque = document.createElement("div");
-            bloque.className = "mb-3 border rounded p-3 bg-white shadow-sm";
-            bloque.innerHTML = `
-              <h6 class="mb-2">Modelos de <strong>${$(selectMarcas).find(`option[value='${id}']`).text()}</strong></h6>
-              <div class="row">
-                ${modelos.map(m => `
-                  <div class="col-md-4">
-                    <div class="form-check">
-                      <input class="form-check-input modelo-checkbox" type="checkbox" value="${m.id_modelo}" id="modelo-${m.id_modelo}">
-                      <label class="form-check-label" for="modelo-${m.id_modelo}">${m.nombre} (${m.anio})</label>
-                    </div>
-                  </div>`).join('')}
-              </div>`;
-            contenedorModelos.appendChild(bloque);
-          });
-        });
-
-      });
     });  
-
-    function obtenerModelosSeleccionados() {
-      return Array.from(document.querySelectorAll(".modelo-checkbox:checked"))
-        .map(cb => ({ id_modelo: parseInt(cb.value) }));
-    }
 
     $('#formRegistrarProducto').on('submit', function (e) {
       e.preventDefault();
       const form = this;
+      
       if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
+          form.reportValidity();
+          return;
       }
 
-      const formData = new FormData(form);
-      const modelos = obtenerModelosSeleccionados();
-      formData.append("json_modelos", JSON.stringify(modelos));
+      // Validar imagen antes de enviar
+      const imagenInput = document.getElementById('reg-url-imagen');
+      if (imagenInput.files.length > 0) {
+          const file = imagenInput.files[0];
+          const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+          const maxSize = 2 * 1024 * 1024; // 2MB
+
+          if (!validTypes.includes(file.type)) {
+              Toastify({
+                  text: 'Formato de imagen no válido. Use JPG, PNG o WEBP.',
+                  duration: 3000,
+                  style: { background: '#dc3545' }
+              }).showToast();
+              return;
+          }
+
+          if (file.size > maxSize) {
+              Toastify({
+                  text: 'La imagen es demasiado grande (máximo 2MB)',
+                  duration: 3000,
+                  style: { background: '#dc3545' }
+              }).showToast();
+              return;
+          }
+      }
+
+      const formData = new FormData(form);      
 
       const submitBtn = $(form).find('button[type="submit"]');
       submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm"></span> Registrando...');
@@ -441,42 +406,49 @@ document.addEventListener("DOMContentLoaded", function () {
         method: 'POST',
         body: formData
       })
-        .then(res => res.json())
+        .then(async res => {
+            if (!res.ok) {
+                const error = await res.json().catch(() => ({}));
+                throw new Error(error.message || 'Error en la respuesta del servidor');
+            }
+            return res.json();
+        })
         .then(data => {
-          if (data.success) {
-            Toastify({
-              text: 'Producto registrado correctamente ✅',
-              duration: 3000,
-              style: { background: '#28a745' }
-            }).showToast();
-            bootstrap.Modal.getInstance(document.getElementById('modalRegistrarProducto')).hide();
-            $('.datatables-category-list').DataTable().ajax.reload(null, false);
-            form.reset();
-            $(selectMarcas).val(null).trigger("change");
-            contenedorModelos.innerHTML = "";
-          } else {
-            Toastify({
-              text: data.message || 'Error al registrar producto ⚠️',
-              duration: 3000,
-              style: { background: '#dc3545' }
-            }).showToast();
-          }
+            if (data.success) {
+                Toastify({
+                    text: 'Producto registrado correctamente ✅',
+                    duration: 3000,
+                    style: { background: '#28a745' }
+                }).showToast();
+                
+                // Resetear formulario
+                form.reset();
+                $('#reg-categoria, #reg-marca, #reg-tipo-unidad').val('').trigger('change');
+                
+                bootstrap.Modal.getInstance(document.getElementById('modalRegistrarProducto')).hide();
+                $('.datatables-category-list').DataTable().ajax.reload(null, false);
+            } else {
+                throw new Error(data.message || 'Error al registrar producto');
+            }
         })
         .catch(err => {
           console.error("Error en registro:", err);
           Toastify({
-            text: 'Error de red ❌',
-            duration: 3000,
-            style: { background: '#dc3545' }
+              text: err.message || 'Error de red ❌',
+              duration: 3000,
+              style: { background: '#dc3545' }
           }).showToast();
         })
         .finally(() => {
-          submitBtn.prop('disabled', false).html('Registrar Producto');
-          isSubmitting = false;
+            submitBtn.prop('disabled', false).html('Registrar Producto');
         });
     });
+
   });
 /* ---- FIN: EVENTO REGISTRAR ---- */
+
+
+
 
 
 

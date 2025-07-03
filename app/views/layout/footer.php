@@ -6,11 +6,9 @@
                     © <script> document.write(new Date().getFullYear()); </script>, Creado con ❤️ por <a href="" target="_blank" class="footer-link">Utpinos</a>
                   </div>
                   <div class="d-none d-lg-inline-block">
-                    <a href="" target="_blank" class="footer-link me-4">Admin Templates</a>
-                    <a href="" class="footer-link me-4" target="_blank">License</a>
-                    <a href="" target="_blank" class="footer-link me-4">Bootstrap Dashboard</a>
-                    <a href="" target="_blank" class="footer-link me-4">Documentation</a>
-                    <a href="" target="_blank" class="footer-link">Support</a>
+                    <a href="" target="_blank" class="footer-link me-4">Equipo</a>
+                    <a href="" target="_blank" class="footer-link me-4">Documentación</a>
+                    <a href="" target="_blank" class="footer-link">Soporte</a>
                   </div>
                 </div>
               </div>

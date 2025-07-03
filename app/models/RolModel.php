@@ -15,6 +15,12 @@ class RolModel extends Model
         $stmt->execute();
         return $stmt->fetchAll();
     }
+    public function listarRolesActivos1()
+    {
+        $stmt = $this->db->prepare("CALL SP_GET_ROLES_ACTIVOS_1()");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
     public function listarPermisos()
     {

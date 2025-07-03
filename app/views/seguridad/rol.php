@@ -109,7 +109,7 @@
                           <div class="mb-3">
                             <label class="form-label" for="edit-rol-nombre">Nombre del rol</label>                                                        
                             <div class="input-group">
-                              <input type="text" class="form-control" id="edit-rol-nombre" name="nombre" placeholder="Nombre del Rol">
+                              <input type="text" class="form-control text-lowercase" id="edit-rol-nombre" name="nombre" placeholder="Nombre del Rol">
                               <button id="verificareditrol" type="button" class="btn btn-primary"><i class="bx bx-check-circle"></i></button>
                             </div> 
 
@@ -179,6 +179,9 @@
                             <button type="button" class="btn btn-secondary" id="optReasignarPorUsuario">
                               Asignar rol personalizado a cada usuario
                             </button>
+                            <!--<button type="button" class="btn btn-secondary" id="optDesabilitarUsuarios">
+                              Desabilitar a cada usuario
+                            </button> Falta agregar lógica en caso de activar y desactivar todo el bloque-->
                           </div>
                         </div>
                       </div>

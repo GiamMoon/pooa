@@ -65,7 +65,7 @@
         <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg p-sm-12 p-6" style="background:white;height: 100%;position: absolute;right: 0;">
           <div class="w-px-400 mx-auto mt-sm-12 mt-8">
             <h4 class="mb-1">BIENVENIDO</h4>
-            <p class="mb-6">Inicia seccion para poder acceder al sistema</p>
+            <p class="mb-6">Inicia sesión para poder acceder al sistema</p>
             
             <form id="formAuthentication" class="mb-6" action="<?= BASE_URL('login/acceder') ?>" method="POST"><!-- login/auth -->
               <div class="mb-6 form-control-validation">

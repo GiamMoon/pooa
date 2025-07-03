@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Helper para verificar si el usuario tiene un permiso específico en la vista actual
   const tienePermisoVista = (permisoEsperado) => {
     return permisos.some(p =>
-      p.ruta === 'compra/proveedor' && p.permiso === permisoEsperado
+      p.ruta === 'contactos/proveedor' && p.permiso === permisoEsperado
     );
   };
 
